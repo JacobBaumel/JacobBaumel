@@ -12,7 +12,6 @@ Plug 'Shougo/echodoc.vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
 call plug#end()
 
 " Deoplete stuff
@@ -22,6 +21,10 @@ set completeopt=menu,noinsert
 let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = 'virtual'
 set encoding=utf-8
+
+let g:ycm_auto_trigger = 1
+let g:ycm_filetype_whitelist = { 'cpp':1, 'h':2, 'hpp':3, 'c':4, 'cxx':5 }
+let g:ycm_global_ycm_extra_conf = '~/.local/share/nvim/plugged/YouCompleteMe/.ycm_extra_conf.py'
 
 " Map tm to run makefiles
 map tm :!make<CR>
@@ -65,3 +68,4 @@ set ruler
 set number
 syntax on
 set visualbell
+set signcolumn=yes
