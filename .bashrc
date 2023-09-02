@@ -56,11 +56,15 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
+parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+
+#PS1='\e[1;32m\]\u@\h\e[0m\] \e[1;34m\]\w \e[1;31m\]$(parse_git_branch)\e[0m\]$ '
+
+PS1='$(if [ $? -eq 0 ]; then printf "\[\e[1;32m\]\[\xE2\x9C\x93\]"; else printf "\[\e[1;31m\]\[\xE2\x9C\x95\]"; fi) \[\e[1;32m\]\u@\h\[\e[0m\] \[\e[1;34m\]\w \[\e[1;31m\]$(parse_git_branch)\[\e[0m\]$ '
+
+#PS1='$(if [ $? -eq 0 ]; then printf "\033[01;32m\]""\xE2\x9C\x93"; else printf "\033[01;31m\]""\xE2\x9C\x95"; fi) \e[1;32m\]\u@\h\e[0m\] \e[1;34m\]\w \e[1;31m\]$(parse_git_branch)\e[0m\]$ '
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
@@ -91,7 +95,8 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias cdc='cd /media/jacob/Common'
+alias cdc='cd /media/jacob/common'
+alias cd..='cd ..'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -125,3 +130,16 @@ export NVM_DIR="$HOME/.nvm"
 . "$HOME/.cargo/env"
 
 alias cl='clear'
+
+mkcd() {
+  mkdir "$1"
+  cd "$1"
+}
+
+alias vim='nvim'
+alias ssh='kitty +kitten ssh'
+export LC_ALL=C
+unset LANGUAGE
+export PATH=/home/jacob/bin:$PATH
+export MOZ_DBUS_REMOTE=1
+alias radi='vim ~/radicubs'
