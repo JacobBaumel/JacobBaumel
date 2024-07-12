@@ -60,21 +60,9 @@ parse_git_branch() {
      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
-#PS1='\e[1;32m\]\u@\h\e[0m\] \e[1;34m\]\w \e[1;31m\]$(parse_git_branch)\e[0m\]$ '
-
 PS1='$(if [ $? -eq 0 ]; then printf "\[\e[1;32m\]\[\xE2\x9C\x93\]"; else printf "\[\e[1;31m\]\[\xE2\x9C\x95\]"; fi) \[\e[1;32m\]\u@\h\[\e[0m\] \[\e[1;34m\]\w \[\e[1;31m\]$(parse_git_branch)\[\e[0m\]$ '
 
-#PS1='$(if [ $? -eq 0 ]; then printf "\033[01;32m\]""\xE2\x9C\x93"; else printf "\033[01;31m\]""\xE2\x9C\x95"; fi) \e[1;32m\]\u@\h\e[0m\] \e[1;34m\]\w \e[1;31m\]$(parse_git_branch)\e[0m\]$ '
 unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -95,21 +83,10 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias cdc='cd /media/jacob/common'
+alias cdc='cd /run/media/jacob/common'
 alias cd..='cd ..'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -127,7 +104,6 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ] ; then source /etc/profile.d/vte.sh; fi # U
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-. "$HOME/.cargo/env"
 
 alias cl='clear'
 
@@ -142,4 +118,8 @@ export LC_ALL=C
 unset LANGUAGE
 export PATH=/home/jacob/bin:$PATH
 export MOZ_DBUS_REMOTE=1
-alias radi='vim ~/radicubs'
+
+GPG_TTY=$(tty)
+export GPG_TTY
+
+alias hosts="grep -P '^Host ([^*]+)$' $HOME/.ssh/config | sed 's/Host //'"
